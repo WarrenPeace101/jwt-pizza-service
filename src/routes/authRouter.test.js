@@ -44,6 +44,12 @@ test('login fail', async () => {
 
 });*/
 
+test('update user fail (no auth token)', async () => {
+  const updateUserRes = await request(app).put(`/api/auth/:${testUserID}`).send(testUser);
+
+  expect(updateUserRes.status).toBe(401);
+})
+
 test('logout user success', async () => {
   //login a user first
   const loginRes = await request(app).put('/api/auth').send(testUser);
@@ -56,16 +62,12 @@ test('logout user success', async () => {
 test('logout user fail (no auth token)', async () => {
   //login a user first
   const loginRes = await request(app).put('/api/auth').send(testUser);
-
   const deleteRes = await request(app).delete('/api/auth').send(testUser);
 
   expect(deleteRes.status).toBe(401)
 })
 
-test('get pizza menu', async () => {
 
-  
-})
 
 
 
