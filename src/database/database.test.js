@@ -5,6 +5,7 @@ const app = require('../service');
 const testUser = { name: 'pizza diner', email: 'reg@test.com', password: 'a' };
 const orderSample = {franchiseId: 1, storeId:1, items:[{ menuId: 1, description: "Veggie", price: 0.05 }]}
 const newFranchise = {name: 'pizza pocket', admins: [{email: 'f@jwt.com'}]}
+const fakeFranchise = {name: 'pizza pocket 2', admins: [{email: 'hahaha@hack.com'}]}
 
 
 if (process.env.VSCODE_INSPECTOR_OPTIONS) {
@@ -31,14 +32,16 @@ test('add menu item success', async () => {
 
     const addMenuResult = DB.addMenuItem(myItem);
     
-
     expect(addMenuResult).not.toBeNull();
 })
 
 test('add user', async () => {
-    const franchisee = {name: "bob", email: "bob.com", password: "insecure", roles: [{ role: Role.Franchisee }] };
-    const addUserResult = DB.addUser(franchisee);
-    expect(addUserResult).not.toBeNull();
+    //const franchisee = {name: "bob", email: "bob.com", password: "insecure", roles: [{ role: Role.Franchisee }] };
+    //const addUserResult = DB.addUser(franchisee);
+
+    const adminUser = await createAdminUser()
+    const addAdminResult = DB.addUser(adminUser)
+    expect(addAdminResult).not.toBeNull();
 })
 
 test('update user', async () => {
@@ -77,6 +80,14 @@ test('insert new franchise', async () => {
     const createFranchiseRes = DB.createFranchise(newFranchise)
 
     expect(createFranchiseRes).not.toBeNull()
+})
+
+test('create franchise phony admin', async () => {
+    //const adminUser = createAdminUser();
+
+    //const createFranchRes = DB.createFranchise(fakeFranchise);
+
+    expect(DB.createFranchise(fakeFranchise)).toThrow();
 })
 
 test('get a users franchise', async () => {
