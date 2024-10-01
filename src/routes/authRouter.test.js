@@ -1,7 +1,9 @@
 const request = require('supertest');
 const app = require('../service');
+const Role = require('../model/model.js')
 
 const testUser = { name: 'pizza diner', email: 'reg@test.com', password: 'a' };
+const testAdmin = { name: 'bob', email: 'another@test.com', password: 'b', roles: [{ role: Role.Admin }]};
 //const testBadUser = {name: ''}
 let testUserAuthToken;
 
@@ -11,6 +13,11 @@ beforeAll(async () => {
   const registerRes = await request(app).post('/api/auth').send(testUser);
   testUserAuthToken = registerRes.body.token;
   testUserID = registerRes.body.user.id
+
+  testAdmin.email = Math.random().toString(36).substring(2, 12) + '@test.com';
+  const adminRegisterRes = await request(app).post('/api/auth').send(testAdmin);
+  testAdminAuthToken = adminRegisterRes.body.token;
+  testAdminID = adminRegisterRes.body.user.id
 });
 
 test('login', async () => {
@@ -26,20 +33,14 @@ test('login fail', async () => {
   testUser.email = null
   const loginRes = await request(app).put('/api/auth').send(testUser);
   expect(loginRes.status).toBe(404);
-
 })
  
 
 /*test('update user success', async () => {
-  //const testUserID = registerRes.body.user.id
-  //logs in user first
- // const loginRes = await request(app).put('/api/auth').send(testUser);
- // const loginUserID = loginRes.body.id
-  //const authToken = loginRes.body.token
 
-  const updateUserRes = await request(app).put(`/api/auth/:${testUserID}`).set('Authorization', `Bearer ${testUserAuthToken}`).send(testUser);
-  console.log(`/api/auth/:${testUserID}`)
-
+  //const loginRes = await request(app).put('/api/auth').send(testAdmin);
+  const updateUserRes = await request(app).put(`/api/auth/:${testAdminID}`).set('Authorization', `Bearer ${testAdminAuthToken}`).send(testAdmin);
+  //console.log(`/api/auth/:${testUserID}`)
   expect(updateUserRes.status).toBe(200);
 
 });*/
