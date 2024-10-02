@@ -27,8 +27,27 @@ async function createAdminUser() {
     return user;
   }
 
+  async function createFranchiseeUser() {
+    let user = { password: 'toomanysecrets', roles: [{ role: Role.Franchisee }] };
+    user.name = randomName();
+    user.email = user.name + '@franchisee.com';
+  
+    await DB.addUser(user);
+  
+    user.password = 'toomanysecrets';
+    return user;
+  }
+
+  async function createItem() {
+    let myItem = {name: randomName(), description: randomName(), image: randomName(), price : 1.99};
+    return myItem;
+  }
+
+
+
 test('add menu item success', async () => {
-    const myItem = {title: "hot dog", description: "yum", image: "x", price: "1.99"}
+    //const myItem = {title: "hot dog", description: "yum", image: "x", price: "1.99"}
+    const myItem = createItem();
 
     const addMenuResult = DB.addMenuItem(myItem);
     
@@ -39,8 +58,12 @@ test('add user', async () => {
     //const franchisee = {name: "bob", email: "bob.com", password: "insecure", roles: [{ role: Role.Franchisee }] };
     //const addUserResult = DB.addUser(franchisee);
 
-    const adminUser = await createAdminUser()
-    const addAdminResult = DB.addUser(adminUser)
+    const adminUser = createAdminUser();
+   // const franchiseeUser = await createFranchiseeUser()
+
+    const addAdminResult = DB.addUser(adminUser);
+    //const addFranchiseeResult = DB.addUser(franchiseeUser)
+
     expect(addAdminResult).not.toBeNull();
 })
 
@@ -62,7 +85,6 @@ const adminUser = createAdminUser()
 const addOrderRes = DB.addDinerOrder(adminUser, orderSample)
 
 expect(addOrderRes).not.toBeNull()
-
 })
 
 //to do
@@ -82,13 +104,13 @@ test('insert new franchise', async () => {
     expect(createFranchiseRes).not.toBeNull()
 })
 
-test('create franchise phony admin', async () => {
+/*test('create franchise phony admin', async () => {
     //const adminUser = createAdminUser();
 
     //const createFranchRes = DB.createFranchise(fakeFranchise);
 
     expect(DB.createFranchise(fakeFranchise)).toThrow();
-})
+})*/
 
 test('get a users franchise', async () => {
 

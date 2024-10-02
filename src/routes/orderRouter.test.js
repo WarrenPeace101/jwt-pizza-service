@@ -3,7 +3,7 @@ const app = require('../service');
 const {DB, Role} = require('../database/database.js')
 
 const testUser = { name: 'pizza diner', email: 'reg@test.com', password: 'a' };
-const menuItem = { title:"Student", description: "No topping, no sauce, just carbs", image:"pizza9.png", price: 0.0001};
+//const menuItem = { title:"Student", description: "No topping, no sauce, just carbs", image:"pizza9.png", price: 0.0001};
 const orderSample = {franchiseId: 1, storeId:1, items:[{ menuId: 1, description: "Veggie", price: 0.05 }]}
 
 function randomName() {
@@ -21,6 +21,11 @@ async function createAdminUser() {
     return user;
   }
 
+  async function createItem() {
+    let myItem = {title: randomName(), description: randomName(), image: randomName(), price : 1.99};
+    return myItem;
+  }
+
 //registers a new user before each test
 beforeAll(async () => {
     testUser.email = Math.random().toString(36).substring(2, 12) + '@test.com';
@@ -35,16 +40,26 @@ test('get menu success', async () => {
 })
 
 test('add item to menu success', async () => {
-    const adminUser = createAdminUser()
-    const loginRes = await request(app).put('/api/auth').send(adminUser);
+    const adminUser = await createAdminUser();
+    //console.log(adminUser)
+    //const registerRes = await request(app).post('/api/auth').send(adminUser);
 
+    //loginAuthToken = registerRes.body.token
+
+    const loginRes = await request(app).put('/api/auth').send({email: adminUser.email, password: adminUser.password});
+    
     loginAuthToken = loginRes.body.token
+    //console.log(loginAuthToken)
 
+    const menuItem = await createItem()
     const addItemRes = await request(app).put('/api/order/menu').set('Authorization', `Bearer ${loginAuthToken}`).send(menuItem);
+
     expect(addItemRes.status).toBe(200);
 })
 
 test('add item to menu fail (no auth token)', async () => {
+    const menuItem = await createItem()
+
     const addItemRes = await request(app).put('/api/order/menu').send(menuItem);
     expect(addItemRes.status).toBe(401);
 })
@@ -68,7 +83,8 @@ test('get order for authenticated user fail (no auth token)', async () => {
 })
 
 test('create order for authenticated user', async () => {
-    const adminUser = createAdminUser()
+    const adminUser = await createAdminUser()
+
     const loginRes = await request(app).put('/api/auth').send(adminUser);
     loginAuthToken = loginRes.body.token
 

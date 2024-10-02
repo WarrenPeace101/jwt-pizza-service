@@ -1,10 +1,10 @@
 const request = require('supertest');
 const app = require('../service');
-const Role = require('../model/model.js')
+const {Role} = require('../model/model.js')
 const {DB} = require('../database/database.js')
 
 const testUser = { name: 'pizza diner', email: 'reg@test.com', password: 'a' };
-const testAdmin = { name: 'bob', email: 'another@test.com', password: 'b', roles: [{ role: Role.Admin }]};
+//const testAdmin = { name: 'bob', email: 'another@test.com', password: 'b', roles: [{ role: Role.Admin }]};
 //const testBadUser = {name: ''}
 let testUserAuthToken;
 
@@ -22,6 +22,7 @@ async function createAdminUser() {
   user.password = 'toomanysecrets';
   return user;
 }
+
 
 //this function registers a new user before every other test
 beforeAll(async () => {
@@ -51,18 +52,19 @@ test('login fail', async () => {
   expect(loginRes.status).toBe(404);
 })
  
-
 test('update user success', async () => {
+  const adminUser = await createAdminUser();
+ 
+  const loginRes = await request(app).put('/api/auth').send({email: adminUser.email, password: adminUser.password});
 
-  const adminUser = createAdminUser();
-  const registerRes = await request(app).put('/api/auth').send(adminUser);
-  const adminID = registerRes.body.user.id;
-  const adminAuth = registerRes.body.token;
+  const adminID = loginRes.body.user.id;
+  const adminAuth = loginRes.body.token;
+  //console.log(adminUser.email)
+  //console.log(adminUser.password)
 
-  const updateUserRes = await request(app).put(`/api/auth/:${adminID}`).set('Authorization', `Bearer ${adminAuth}`).send(adminUser);
-  //console.log(`/api/auth/:${testUserID}`)
+  const updateUserRes = await request(app).put(`/api/auth/:${adminID}`).set('Authorization', `Bearer ${adminAuth}`).send({email: adminUser.email, password: adminUser.password});
+  
   expect(updateUserRes.status).toBe(200);
-
 });
 
 test('update user fail (no auth token)', async () => {
