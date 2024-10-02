@@ -103,6 +103,7 @@ authRouter.put(
   '/:userId',
   authRouter.authenticateToken,
   asyncHandler(async (req, res) => {
+    console.log('update user call')
     const { email, password } = req.body;
     const userId = Number(req.params.userId);
     const user = req.user;
@@ -110,6 +111,7 @@ authRouter.put(
       return res.status(403).json({ message: 'unauthorized' });
     }
 
+    console.log('user is authorized')
     const updatedUser = await DB.updateUser(userId, email, password);
     res.json(updatedUser);
   })

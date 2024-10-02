@@ -77,6 +77,7 @@ class DB {
 
   async updateUser(userId, email, password) {
     const connection = await this.getConnection();
+    console.log('got connection', userId, email, password)
     try {
       const params = [];
       if (password) {

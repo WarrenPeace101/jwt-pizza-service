@@ -38,7 +38,7 @@ async function createAdminUser() {
     return user;
   }
 
-  async function createItem() {
+   function createItem() {
     let myItem = {name: randomName(), description: randomName(), image: randomName(), price : 1.99};
     return myItem;
   }
@@ -58,17 +58,18 @@ test('add user', async () => {
     //const franchisee = {name: "bob", email: "bob.com", password: "insecure", roles: [{ role: Role.Franchisee }] };
     //const addUserResult = DB.addUser(franchisee);
 
-    const adminUser = createAdminUser();
+    const adminUser = await createAdminUser();
+    //console.log(adminUser);
    // const franchiseeUser = await createFranchiseeUser()
 
-    const addAdminResult = DB.addUser(adminUser);
+    //const addAdminResult = DB.addUser(adminUser);
     //const addFranchiseeResult = DB.addUser(franchiseeUser)
 
-    expect(addAdminResult).not.toBeNull();
+    //expect(adminUser).not.toBeNull();
 })
 
 test('update user', async () => {
-    const adminUser = createAdminUser()
+    const adminUser = await createAdminUser()
     //const loginRes = await request(app).put('/api/auth').send(adminUser);
 
     //loginAuthToken = loginRes.body.token
@@ -80,7 +81,7 @@ test('update user', async () => {
 })
 
 test('add diner order', async () => {
-const adminUser = createAdminUser()
+const adminUser = await createAdminUser()
 
 const addOrderRes = DB.addDinerOrder(adminUser, orderSample)
 
@@ -89,7 +90,8 @@ expect(addOrderRes).not.toBeNull()
 
 //to do
 test('get orders', async () => {
-    const adminUser = createAdminUser()
+    const adminUser = await createAdminUser();
+
 
     const orderList = DB.getOrders(adminUser)
 
@@ -97,7 +99,7 @@ test('get orders', async () => {
 })
 
 test('insert new franchise', async () => {
-    const adminUser = createAdminUser()
+    const adminUser = await createAdminUser()
 
     const createFranchiseRes = DB.createFranchise(newFranchise)
 
@@ -114,7 +116,7 @@ test('insert new franchise', async () => {
 
 test('get a users franchise', async () => {
 
-    const adminUser = createAdminUser()
+    const adminUser = await createAdminUser()
 
     const getFranchiseRes = DB.getUserFranchises(adminUser.id)
 
@@ -122,7 +124,7 @@ test('get a users franchise', async () => {
 })
 
 test('delete a franchise', async () => {
-    const adminUser = createAdminUser()
+    const adminUser = await createAdminUser()
 
     const deleteFranchRes = DB.deleteFranchise()
 
@@ -131,7 +133,7 @@ test('delete a franchise', async () => {
 })
 
 test('get franchises admin user', async () => {
-    const adminUser = createAdminUser()
+    const adminUser = await createAdminUser()
 
     const getFranchRes = DB.getFranchises(adminUser)
 
@@ -141,6 +143,19 @@ test('get franchises admin user', async () => {
 test('get franchises regular user', async () => {
     const getFranchRes = DB.getFranchises(testUser)
     expect(getFranchRes).not.toBeNull()
+})
+
+test('logout user', async () => {
+    const adminUser = await createAdminUser();
+    
+    //const loginRes = await request(app).put('/api/auth').send({email: adminUser.email, password: adminUser.password});
+
+    //adminToken = loginRes.body.token;
+   // console.log(adminUser)
+    //console.log(adminToken);
+
+    //const loginCall = DB.loginUser(adminUser, adminToken);
+    //const logoutRes = DB.logoutUser(adminToken);
 })
 
 

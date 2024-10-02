@@ -28,10 +28,10 @@ async function createAdminUser() {
 
 //registers a new user before each test
 beforeAll(async () => {
-    testUser.email = Math.random().toString(36).substring(2, 12) + '@test.com';
-    const registerRes = await request(app).post('/api/auth').send(testUser);
-    testUserAuthToken = registerRes.body.token;
-    testUserID = registerRes.body.user.id
+    //testUser.email = Math.random().toString(36).substring(2, 12) + '@test.com';
+    //const registerRes = await request(app).post('/api/auth').send(testUser);
+    //testUserAuthToken = registerRes.body.token;
+    //testUserID = registerRes.body.user.id
   });
 
 test('get menu success', async () => {
@@ -65,6 +65,11 @@ test('add item to menu fail (no auth token)', async () => {
 })
 
 test('get order for authenticated user', async () => {
+    testUser.email = Math.random().toString(36).substring(2, 12) + '@test.com';
+    const registerRes = await request(app).post('/api/auth').send(testUser);
+    testUserAuthToken = registerRes.body.token;
+    testUserID = registerRes.body.user.id
+    
     const loginRes = await request(app).put('/api/auth').send(testUser);
     loginAuthToken = loginRes.body.token
 

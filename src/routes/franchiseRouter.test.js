@@ -15,41 +15,30 @@ if (process.env.VSCODE_INSPECTOR_OPTIONS) {
 function randomName() {
     return Math.random().toString(36).substring(2, 12);
   }
-  
+
 async function createAdminUser() {
     let user = { password: 'toomanysecrets', roles: [{ role: Role.Admin }] };
     user.name = randomName();
     user.email = user.name + '@admin.com';
-  
+
     await DB.addUser(user);
-  
+
     user.password = 'toomanysecrets';
     return user;
   }
-  
+
   async function createNewFranchise(adminUser) {
     let newFranchise = {name: randomName(), admins: [{email: adminUser.email}]}
     return newFranchise
   }
 
 beforeAll(async () => {
-    testUser.email = Math.random().toString(36).substring(2, 12) + '@test.com';
-    const registerRes = await request(app).post('/api/auth').send(testUser);
-    testUserAuthToken = registerRes.body.token;
-    testUserID = registerRes.body.user.id
-
-    /*testAdmin.email = Math.random().toString(36).substring(2, 12) + '@test.com';
-    const adminRegisterRes = await request(app).post('/api/auth').send(testAdmin);
-    testAdminAuthToken = adminRegisterRes.body.token;
-    testAdminID = adminRegisterRes.body.user.id*/
+    
   });
 
   test('list franchises', async () => {
-    
-
     const listFranchiseRes = await request(app).get('/api/franchise');
     expect(listFranchiseRes.status).toBe(200)
-
   }) 
 
   test('get a users franchises', async () => {
@@ -59,12 +48,13 @@ beforeAll(async () => {
     const adminToken = loginAdminRes.body.token;
     const adminID = loginAdminRes.body.user.id;
 
-    const newFranchise = await createNewFranchise();
+
+    const newFranchise = await createNewFranchise(adminUser);
     const newFranchiseRes = await request(app).post('/api/franchise').set('Authorization', `Bearer ${adminToken}`).send(newFranchise);
     const newFranchID = newFranchiseRes.body.id;
 
-    //const getUserFranchisesRes = await request(app).get(`/api/franchise/${adminID}`).set('Authorization', `Bearer ${adminToken}`).send(adminUser);
-    //expect(getUserFranchisesRes.status).toBe(200)
+    const getUserFranchisesRes = await request(app).get(`/api/franchise/${adminID}`).set('Authorization', `Bearer ${adminToken}`).send(adminUser);
+    expect(getUserFranchisesRes.status).toBe(200)
     //console.log(getUserFranchisesRes.body)
     //expect(getUserFranchisesRes.body)
 
@@ -103,7 +93,7 @@ beforeAll(async () => {
   test('create a franchise store', async () => {
 
     const adminUser = await createAdminUser();
-    
+  
     //login
     const loginAdminRes = await request(app).put('/api/auth').send(adminUser);
 
@@ -124,7 +114,7 @@ beforeAll(async () => {
   })
 
   test('delete a franchise store', async () => {
-    
+  
   })
 
 
