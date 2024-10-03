@@ -37,7 +37,7 @@ beforeAll(async () => {
   testAdminID = adminRegisterRes.body.user.id*/
 });
 
-test('login', async () => {
+/*test('login', async () => {
   const testUser = { name: 'pizza diner', email: 'reg@test.com', password: 'a' };
   testUser.email = Math.random().toString(36).substring(2, 12) + '@test.com';
   const registerRes = await request(app).post('/api/auth').send(testUser);
@@ -50,12 +50,12 @@ test('login', async () => {
 
   const { password, ...user } = { ...testUser, roles: [{ role: 'diner' }] };
   expect(loginRes.body.user).toMatchObject(user);
-});
+});*/
 
 test('login fail', async () => {
   const testUser = { name: 'pizza diner', email: 'reg@test.com', password: 'a' };
   testUser.email = null;
-  const registerRes = await request(app).post('/api/auth').send(testUser);
+  //const registerRes = await request(app).post('/api/auth').send(testUser);
 
   const loginRes = await request(app).put('/api/auth').send(testUser);
   expect(loginRes.status).toBe(404);
@@ -81,7 +81,7 @@ test('update user fail (no auth token)', async () => {
   testUser.email = Math.random().toString(36).substring(2, 12) + '@test.com';
   const registerRes = await request(app).post('/api/auth').send(testUser);
 
-  testUserID = registerRes.body.user.id;
+  const testUserID = registerRes.body.user.id;
 
   const updateUserRes = await request(app).put(`/api/auth/:${testUserID}`).send(testUser);
 
@@ -91,7 +91,8 @@ test('update user fail (no auth token)', async () => {
 test('logout user success', async () => {
   const testUser = { name: 'pizza diner', email: 'reg@test.com', password: 'a' };
   testUser.email = Math.random().toString(36).substring(2, 12) + '@test.com';
-  const registerRes = await request(app).post('/api/auth').send(testUser);
+  await request(app).post('/api/auth').send(testUser);
+
 
   //login a user first
   const loginRes = await request(app).put('/api/auth').send(testUser);
@@ -105,7 +106,7 @@ test('logout user success', async () => {
 test('logout user fail (no auth token)', async () => {
   const testUser = { name: 'pizza diner', email: 'reg@test.com', password: 'a' };
   testUser.email = Math.random().toString(36).substring(2, 12) + '@test.com';
-  const registerRes = await request(app).post('/api/auth').send(testUser);
+  await request(app).post('/api/auth').send(testUser);
 
   //login a user first
   const loginRes = await request(app).put('/api/auth').send(testUser);

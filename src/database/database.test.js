@@ -1,16 +1,17 @@
-const request = require('supertest');
+//const request = require('supertest');
 const { DB, Role } = require('./database.js')
-const app = require('../service');
+//const app = require('../service');
 
 const testUser = { name: 'pizza diner', email: 'reg@test.com', password: 'a' };
-const orderSample = {franchiseId: 1, storeId:1, items:[{ menuId: 1, description: "Veggie", price: 0.05 }]}
-const newFranchise = {name: 'pizza pocket', admins: [{email: 'f@jwt.com'}]}
-const fakeFranchise = {name: 'pizza pocket 2', admins: [{email: 'hahaha@hack.com'}]}
+//const orderSample = {franchiseId: 1, storeId:1, items:[{ menuId: 1, description: "Veggie", price: 0.05 }]}
+//const newFranchise = {name: 'pizza pocket', admins: [{email: 'f@jwt.com'}]}
+//const fakeFranchise = {name: 'pizza pocket 2', admins: [{email: 'hahaha@hack.com'}]}
 
 
-if (process.env.VSCODE_INSPECTOR_OPTIONS) {
+/*if (process.env.VSCODE_INSPECTOR_OPTIONS) {
     jest.setTimeout(60 * 1000 * 5); // 5 minutes
   }
+*/
 
 function randomName() {
     return Math.random().toString(36).substring(2, 12);
@@ -28,7 +29,7 @@ async function createAdminUser() {
     return user;
   }
 
-  async function createFranchiseeUser() {
+ /* async function createFranchiseeUser() {
     let user = { password: 'toomanysecrets', roles: [{ role: Role.Franchisee }] };
     user.name = randomName();
     user.email = user.name + '@franchisee.com';
@@ -37,20 +38,20 @@ async function createAdminUser() {
   
     user.password = 'toomanysecrets';
     return user;
-  }
+  }*/
 
-  function createDinerOrder() {
+  /*function createDinerOrder() {
 
     //let myOrder = {dinerId, franchiseId, storeId, date};
 
 
-  }
+  }*/
 
-   function createItem() {
+   /*function createItem() {
    // let myItem = {name: randomName(), description: randomName(), image: randomName(), price : 1.99};
     let myItem = {orderId, menuId, description, price}
     return myItem;
-  }
+  }*/
 
 
 

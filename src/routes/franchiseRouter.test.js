@@ -5,7 +5,7 @@ const app = require('../service');
 //const testAdmin = { name: 'bob', email: 'another@test.com', password: 'b', roles: [{ role: Role.Admin }]};
 //const newFranchise = {name: 'pizza pocket', admins: [{email: 'f@jwt.com'}]}
 
-let testUserAuthToken;
+//let testUserAuthToken;
 const { Role, DB } = require('../database/database.js');
 
 if (process.env.VSCODE_INSPECTOR_OPTIONS) {
@@ -50,8 +50,8 @@ async function createAdminUser() {
 
 
     const newFranchise = await createNewFranchise(adminUser);
-    const newFranchiseRes = await request(app).post('/api/franchise').set('Authorization', `Bearer ${adminToken}`).send(newFranchise);
-    const newFranchID = newFranchiseRes.body.id;
+    await request(app).post('/api/franchise').set('Authorization', `Bearer ${adminToken}`).send(newFranchise);
+    //const newFranchID = newFranchiseRes.body.id;
 
     const getUserFranchisesRes = await request(app).get(`/api/franchise/${adminID}`).set('Authorization', `Bearer ${adminToken}`);
     expect(getUserFranchisesRes.status).toBe(200);
