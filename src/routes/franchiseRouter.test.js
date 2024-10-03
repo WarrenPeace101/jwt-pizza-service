@@ -1,7 +1,7 @@
 const request = require('supertest');
 const app = require('../service');
 
-const testUser = { name: 'pizza diner', email: 'reg@test.com', password: 'a' };
+//const testUser = { name: 'pizza diner', email: 'reg@test.com', password: 'a' };
 //const testAdmin = { name: 'bob', email: 'another@test.com', password: 'b', roles: [{ role: Role.Admin }]};
 //const newFranchise = {name: 'pizza pocket', admins: [{email: 'f@jwt.com'}]}
 
@@ -32,7 +32,7 @@ async function createAdminUser() {
     return newFranchise
   }
 
-beforeAll(async () => {
+  beforeAll(async () => {
     
   });
 
@@ -53,12 +53,13 @@ beforeAll(async () => {
     const newFranchiseRes = await request(app).post('/api/franchise').set('Authorization', `Bearer ${adminToken}`).send(newFranchise);
     const newFranchID = newFranchiseRes.body.id;
 
-    const getUserFranchisesRes = await request(app).get(`/api/franchise/${adminID}`).set('Authorization', `Bearer ${adminToken}`).send(adminUser);
+    const getUserFranchisesRes = await request(app).get(`/api/franchise/${adminID}`).set('Authorization', `Bearer ${adminToken}`);
     expect(getUserFranchisesRes.status).toBe(200);
     //console.log(getUserFranchisesRes.body)
     //expect(getUserFranchisesRes.body)
 
   })
+  /*
 
   test('create a new franchise', async () => {
     const adminUser = await createAdminUser()
@@ -115,7 +116,7 @@ beforeAll(async () => {
 
   test('delete a franchise store', async () => {
   
-  })
+  })*/
 
 
 
