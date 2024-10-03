@@ -56,7 +56,10 @@ class DB {
   }
 
   async getUser(email, password) {
+    console.log('in get user function')
     const connection = await this.getConnection();
+    console.log('got connection')
+    
     try {
       const userResult = await this.query(connection, `SELECT * FROM user WHERE email=?`, [email]);
       const user = userResult[0];
@@ -64,20 +67,25 @@ class DB {
         throw new StatusCodeError('unknown user', 404);
       }
 
+      console.log('not an unknown user!');
       const roleResult = await this.query(connection, `SELECT * FROM userRole WHERE userId=?`, [user.id]);
       const roles = roleResult.map((r) => {
         return { objectId: r.objectId || undefined, role: r.role };
       });
-
+      console.log('got user roles!')
+      console.log('user: ' + user)
+      console.log('roles: ' + roles)
+  
       return { ...user, roles: roles, password: undefined };
     } finally {
+      console.log('leaving db get user!')
       connection.end();
     }
   }
 
   async updateUser(userId, email, password) {
     const connection = await this.getConnection();
-    console.log('got connection', userId, email, password)
+    //console.log('got connection', userId, email, password)
     try {
       const params = [];
       if (password) {

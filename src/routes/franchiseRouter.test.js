@@ -54,7 +54,7 @@ beforeAll(async () => {
     const newFranchID = newFranchiseRes.body.id;
 
     const getUserFranchisesRes = await request(app).get(`/api/franchise/${adminID}`).set('Authorization', `Bearer ${adminToken}`).send(adminUser);
-    expect(getUserFranchisesRes.status).toBe(200)
+    expect(getUserFranchisesRes.status).toBe(200);
     //console.log(getUserFranchisesRes.body)
     //expect(getUserFranchisesRes.body)
 

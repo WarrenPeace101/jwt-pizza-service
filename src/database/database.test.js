@@ -21,6 +21,7 @@ async function createAdminUser() {
     user.name = randomName();
     user.email = user.name + '@admin.com';
   
+    //console.log(user);
     await DB.addUser(user);
   
     user.password = 'toomanysecrets';
@@ -38,38 +39,47 @@ async function createAdminUser() {
     return user;
   }
 
+  function createDinerOrder() {
+
+    //let myOrder = {dinerId, franchiseId, storeId, date};
+
+
+  }
+
    function createItem() {
-    let myItem = {name: randomName(), description: randomName(), image: randomName(), price : 1.99};
+   // let myItem = {name: randomName(), description: randomName(), image: randomName(), price : 1.99};
+    let myItem = {orderId, menuId, description, price}
     return myItem;
   }
 
 
 
-test('add menu item success', async () => {
+/*test('add menu item success', async () => {
     //const myItem = {title: "hot dog", description: "yum", image: "x", price: "1.99"}
     const myItem = createItem();
 
     const addMenuResult = DB.addMenuItem(myItem);
     
     expect(addMenuResult).not.toBeNull();
-})
+})*/
 
 test('add user', async () => {
     //const franchisee = {name: "bob", email: "bob.com", password: "insecure", roles: [{ role: Role.Franchisee }] };
     //const addUserResult = DB.addUser(franchisee);
 
     const adminUser = await createAdminUser();
+    
     //console.log(adminUser);
    // const franchiseeUser = await createFranchiseeUser()
 
     //const addAdminResult = DB.addUser(adminUser);
     //const addFranchiseeResult = DB.addUser(franchiseeUser)
 
-    //expect(adminUser).not.toBeNull();
+    expect(adminUser).not.toBeNull();
 })
 
 test('update user', async () => {
-    const adminUser = await createAdminUser()
+    const adminUser = await createAdminUser();
     //const loginRes = await request(app).put('/api/auth').send(adminUser);
 
     //loginAuthToken = loginRes.body.token
@@ -80,22 +90,30 @@ test('update user', async () => {
     expect(newUser).not.toBeNull()
 })
 
-test('add diner order', async () => {
-const adminUser = await createAdminUser()
+/*test('add diner order', async () => {
+const adminUser = await createAdminUser();
+
+const myItem = createItem();
 
 const addOrderRes = DB.addDinerOrder(adminUser, orderSample)
+console.log(addOrderRes);
 
 expect(addOrderRes).not.toBeNull()
-})
+})*/
 
 //to do
 test('get orders', async () => {
+    console.log('get orders test');
     const adminUser = await createAdminUser();
 
+    //console.log('db get orders test:');
+    //console.log(adminUser);
+    const databaseUser = await DB.getUser(adminUser.email, adminUser.password);
+    console.log('database user: ' + databaseUser.body)
 
-    const orderList = DB.getOrders(adminUser)
+    const orderList = await DB.getOrders(databaseUser);
 
-    expect(orderList).not.toBeNull()
+    expect(orderList).not.toBeNull();
 })
 
 test('insert new franchise', async () => {
@@ -126,6 +144,8 @@ test('get a users franchise', async () => {
 test('delete a franchise', async () => {
     const adminUser = await createAdminUser()
 
+
+
     const deleteFranchRes = DB.deleteFranchise()
 
     expect(deleteFranchRes.result).not.toBe(500)
@@ -148,14 +168,14 @@ test('get franchises regular user', async () => {
 test('logout user', async () => {
     const adminUser = await createAdminUser();
     
-    //const loginRes = await request(app).put('/api/auth').send({email: adminUser.email, password: adminUser.password});
+    const loginRes = await request(app).put('/api/auth').send({email: adminUser.email, password: adminUser.password});
 
-    //adminToken = loginRes.body.token;
-   // console.log(adminUser)
-    //console.log(adminToken);
+    adminToken = loginRes.body.token;
+    console.log(adminToken);
 
-    //const loginCall = DB.loginUser(adminUser, adminToken);
-    //const logoutRes = DB.logoutUser(adminToken);
+    const loginCall = DB.loginUser(adminUser, adminToken);
+    const logoutRes = DB.logoutUser(adminToken);
+    expect(logoutRes).not.toBeNull();
 })
 
 

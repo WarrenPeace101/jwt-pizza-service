@@ -69,10 +69,10 @@ test('update user success', async () => {
   const adminID = loginRes.body.user.id;
   const adminAuth = loginRes.body.token;
 
-  console.log(adminID)
+  //console.log(adminID)
   const updateUserRes = await request(app).put(`/api/auth/${adminID}`).set('Authorization', `Bearer ${adminAuth}`).send({email: adminUser.email, password: adminUser.password});
   
-  console.log(updateUserRes.body)
+  //console.log(updateUserRes.body)
   expect(updateUserRes.status).toBe(200);
 });
 
