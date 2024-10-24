@@ -15,7 +15,7 @@ jobs:
       mysql:
         image: mysql:8.0.29
         env:
-          MYSQL_ROOT_PASSWORD: WMangum11
+          MYSQL_ROOT_PASSWORD: ILikeToPlayTennis
           MYSQL_DATABASE: pizza
         ports:
           - "3306:3306"
@@ -48,7 +48,7 @@ jobs:
               connection: {
                 host: '127.0.0.1',
                 user: 'root',
-                password: 'WMangum11',
+                password: 'ILikeToPlayTennis',
                 database: 'pizza',
                 connectTimeout: 60000,
               },
