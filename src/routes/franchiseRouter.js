@@ -60,6 +60,9 @@ franchiseRouter.get(
   '/',
   asyncHandler(async (req, res) => {
     res.json(await DB.getFranchises(req.user));
+
+    metrics.incrementGetRequests();
+    metrics.incrementTotalRequests();
   })
 );
 
@@ -77,6 +80,9 @@ franchiseRouter.get(
     }
 
     res.json(result);
+
+    metrics.incrementGetRequests();
+    metrics.incrementTotalRequests();
   })
 );
 
@@ -91,6 +97,9 @@ franchiseRouter.post(
 
     const franchise = req.body;
     res.send(await DB.createFranchise(franchise));
+
+    metrics.incrementPostRequests();
+    metrics.incrementTotalRequests();
   })
 );
 
@@ -105,6 +114,9 @@ franchiseRouter.delete(
     const franchiseId = Number(req.params.franchiseId);
     await DB.deleteFranchise(franchiseId);
     res.json({ message: 'franchise deleted' });
+
+    metrics.incrementDeleteRequests();
+    metrics.incrementTotalRequests();
   })
 );
 
@@ -120,6 +132,9 @@ franchiseRouter.post(
     }
 
     res.send(await DB.createStore(franchise.id, req.body));
+
+    metrics.incrementPostRequests();
+    metrics.incrementTotalRequests();
   })
 );
 
@@ -137,6 +152,9 @@ franchiseRouter.delete(
     const storeId = Number(req.params.storeId);
     await DB.deleteStore(franchiseId, storeId);
     res.json({ message: 'store deleted' });
+
+    metrics.incrementDeleteRequests();
+    metrics.incrementTotalRequests();
   })
 );
 

@@ -45,6 +45,9 @@ orderRouter.get(
   '/menu',
   asyncHandler(async (req, res) => {
     res.send(await DB.getMenu());
+
+    metrics.incrementGetRequests();
+    metrics.incrementTotalRequests();
   })
 );
 
@@ -60,6 +63,9 @@ orderRouter.put(
     const addMenuItemReq = req.body;
     await DB.addMenuItem(addMenuItemReq);
     res.send(await DB.getMenu());
+
+    metrics.incrementPutRequests();
+    metrics.incrementTotalRequests();
   })
 );
 
@@ -69,6 +75,9 @@ orderRouter.get(
   authRouter.authenticateToken,
   asyncHandler(async (req, res) => {
     res.json(await DB.getOrders(req.user, req.query.page));
+
+    metrics.incrementGetRequests();
+    metrics.incrementTotalRequests();
   })
 );
 
@@ -90,6 +99,9 @@ orderRouter.post(
     } else {
       res.status(500).send({ message: 'Failed to fulfill order at factory', reportUrl: j.reportUrl });
     }
+
+    metrics.incrementPostRequests();
+    metrics.incrementTotalRequests();
   })
 );
 

@@ -7,25 +7,50 @@ class Metrics {
     this.totalGetRequests = 0;
     this.totalPostRequests = 0;
     this.totalDeleteRequests = 0;
+    this.totalPutRequests = 0;
 
     // This will periodically sent metrics to Grafana
     const timer = setInterval(() => {
       this.sendMetricToGrafana('request', 'all', 'total', this.totalRequests);
+      this.sendMetricToGrafana('request', 'get', 'get', this.totalGetRequests);
+      this.sendMetricToGrafana('request', 'post', 'post', this.totalPostRequests);
+      this.sendMetricToGrafana('request', 'delete', 'delete', this.totalDeleteRequests);
+
     }, 10000);
     timer.unref();
   }
 
-  incrementRequests() {
+  incrementTotalRequests() {
     this.totalRequests++;
   }
 
-  sendMetricToGrafana(metricPrefix, httpMethod, metricName, metricValue) {
-    const metric = `${metricPrefix},source=${config.source},method=${httpMethod} ${metricName}=${metricValue}`;
+  incrementGetRequests() {
+    this.totalGetRequests++;
+  }
 
-    fetch(`${config.url}`, {
+  incrementPostRequests() {
+    this.totalPostRequests++;
+  }
+
+  incrementDeleteRequests() {
+    this.totalDeleteRequests++;
+  }
+
+  incrementPutRequests() {
+    this.totalPutRequests++;
+  }
+
+
+
+  sendMetricToGrafana(metricPrefix, httpMethod, metricName, metricValue) {
+    const metric = `${metricPrefix},source=${config.metrics.source},method=${httpMethod} ${metricName}=${metricValue}`;
+
+    //console.log(config.metrics.url);
+
+    fetch(`${config.metrics.url}`, {
       method: 'post',
       body: metric,
-      headers: { Authorization: `Bearer ${config.userId}:${config.apiKey}` },
+      headers: { Authorization: `Bearer ${config.metrics.userId}:${config.metrics.apiKey}` },
     })
       .then((response) => {
         if (!response.ok) {
@@ -63,7 +88,7 @@ class Metrics {
     return memoryUsage.toFixed(2);
   }
 
-  sendMetricsPeriodically(period) {
+  /*sendMetricsPeriodically(period) {
     const timer = setInterval(() => {
       try {
         const buf = new MetricBuilder();
@@ -79,7 +104,7 @@ class Metrics {
         console.log('Error sending metrics', error);
       }
     }, period);
-  }
+  }*/
 }
 
 
