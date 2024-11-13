@@ -105,7 +105,7 @@
         {
           "disableTextWrap": false,
           "editorMode": "builder",
-          "expr": "request_serviceLatency{source=\"jwt-pizza-service-dev\"}",
+          "expr": "request_serviceLatency{source=\"jwt-pizza-service\"}",
           "fullMetaSearch": false,
           "includeNullMetadata": true,
           "legendFormat": "serviceEndpoints",
@@ -120,7 +120,7 @@
           },
           "disableTextWrap": false,
           "editorMode": "builder",
-          "expr": "request_pizzaCreationLatency{source=\"jwt-pizza-service-dev\"}",
+          "expr": "request_pizzaCreationLatency{source=\"jwt-pizza-service\"}",
           "fullMetaSearch": false,
           "hide": false,
           "includeNullMetadata": true,
@@ -218,7 +218,7 @@
         {
           "disableTextWrap": false,
           "editorMode": "builder",
-          "expr": "request_activeUsers{source=\"jwt-pizza-service-dev\"}",
+          "expr": "request_activeUsers{source=\"jwt-pizza-service\"}",
           "fullMetaSearch": false,
           "includeNullMetadata": true,
           "legendFormat": "userCount",
@@ -313,8 +313,8 @@
       "targets": [
         {
           "disableTextWrap": false,
-          "editorMode": "code",
-          "expr": "rate(request_totalPizzaRevenue{source=\"jwt-pizza-service-dev\"}[1m])",
+          "editorMode": "builder",
+          "expr": "rate(request_totalPizzaRevenue{source=\"jwt-pizza-service\"}[1m])",
           "fullMetaSearch": false,
           "includeNullMetadata": true,
           "legendFormat": "revenue per minute",
@@ -328,8 +328,8 @@
             "uid": "grafanacloud-prom"
           },
           "disableTextWrap": false,
-          "editorMode": "code",
-          "expr": "rate(request_numPizzasSold{source=\"jwt-pizza-service-dev\"}[1m])",
+          "editorMode": "builder",
+          "expr": "rate(request_numPizzasSold{source=\"jwt-pizza-service\"}[1m])",
           "fullMetaSearch": false,
           "hide": false,
           "includeNullMetadata": true,
@@ -346,7 +346,7 @@
           },
           "disableTextWrap": false,
           "editorMode": "builder",
-          "expr": "request_numCreationFailures{source=\"jwt-pizza-service-dev\"}",
+          "expr": "request_numCreationFailures{source=\"jwt-pizza-service\"}",
           "fullMetaSearch": false,
           "hide": false,
           "includeNullMetadata": true,
@@ -414,7 +414,7 @@
         {
           "disableTextWrap": false,
           "editorMode": "builder",
-          "expr": "request_cpu{source=\"jwt-pizza-service-dev\"}",
+          "expr": "request_cpu{source=\"jwt-pizza-service\"}",
           "fullMetaSearch": false,
           "includeNullMetadata": true,
           "legendFormat": "__auto",
@@ -544,8 +544,8 @@
             "uid": "grafanacloud-prom"
           },
           "disableTextWrap": false,
-          "editorMode": "code",
-          "expr": "rate(request_get{source=\"jwt-pizza-service-dev\"}[1m])",
+          "editorMode": "builder",
+          "expr": "rate(request_get{source=\"jwt-pizza-service\"}[1m])",
           "fullMetaSearch": false,
           "hide": false,
           "includeNullMetadata": true,
@@ -561,8 +561,8 @@
             "uid": "grafanacloud-prom"
           },
           "disableTextWrap": false,
-          "editorMode": "code",
-          "expr": "rate(request_post{source=\"jwt-pizza-service-dev\"}[1m])",
+          "editorMode": "builder",
+          "expr": "rate(request_post{source=\"jwt-pizza-service\"}[1m])",
           "fullMetaSearch": false,
           "hide": false,
           "includeNullMetadata": true,
@@ -578,8 +578,8 @@
             "uid": "grafanacloud-prom"
           },
           "disableTextWrap": false,
-          "editorMode": "code",
-          "expr": "rate(request_delete{source=\"jwt-pizza-service-dev\"}[1m])",
+          "editorMode": "builder",
+          "expr": "rate(request_delete{source=\"jwt-pizza-service\"}[1m])",
           "fullMetaSearch": false,
           "hide": false,
           "includeNullMetadata": true,
@@ -595,8 +595,8 @@
             "uid": "grafanacloud-prom"
           },
           "disableTextWrap": false,
-          "editorMode": "code",
-          "expr": "rate(request_put{source=\"jwt-pizza-service-dev\"}[1m])",
+          "editorMode": "builder",
+          "expr": "rate(request_put{source=\"jwt-pizza-service\"}[1m])",
           "fullMetaSearch": false,
           "hide": false,
           "includeNullMetadata": true,
@@ -612,8 +612,8 @@
             "uid": "grafanacloud-prom"
           },
           "disableTextWrap": false,
-          "editorMode": "code",
-          "expr": "rate(request_total{source=\"jwt-pizza-service-dev\"}[1m])",
+          "editorMode": "builder",
+          "expr": "rate(request_total{source=\"jwt-pizza-service\"}[1m])",
           "fullMetaSearch": false,
           "hide": false,
           "includeNullMetadata": true,
@@ -681,7 +681,7 @@
         {
           "disableTextWrap": false,
           "editorMode": "builder",
-          "expr": "request_memory{source=\"jwt-pizza-service-dev\"}",
+          "expr": "request_memory{source=\"jwt-pizza-service\"}",
           "fullMetaSearch": false,
           "includeNullMetadata": true,
           "legendFormat": "__auto",
@@ -777,7 +777,7 @@
         {
           "disableTextWrap": false,
           "editorMode": "builder",
-          "expr": "rate(request_authenticationSuccesses{source=\"jwt-pizza-service-dev\"}[1m])",
+          "expr": "rate(request_authenticationSuccesses{source=\"jwt-pizza-service\"}[1m])",
           "fullMetaSearch": false,
           "includeNullMetadata": true,
           "legendFormat": "authentication successes",
@@ -791,8 +791,8 @@
             "uid": "grafanacloud-prom"
           },
           "disableTextWrap": false,
-          "editorMode": "code",
-          "expr": "rate(request_authenticationFailures{source=\"jwt-pizza-service-dev\"}[1m])",
+          "editorMode": "builder",
+          "expr": "rate(request_authenticationFailures{source=\"jwt-pizza-service\"}[1m])",
           "fullMetaSearch": false,
           "hide": false,
           "includeNullMetadata": true,
@@ -814,13 +814,13 @@
     "list": []
   },
   "time": {
-    "from": "now-15m",
+    "from": "now-6h",
     "to": "now"
   },
   "timepicker": {},
   "timezone": "browser",
   "title": "Pizza Dashboard",
   "uid": "ee31qjqjjj8cge",
-  "version": 38,
+  "version": 46,
   "weekStart": ""
 }
