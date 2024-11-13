@@ -143,8 +143,8 @@ orderRouter.post(
 
       res.status(500).send({ message: 'Failed to fulfill order at factory', reportUrl: j.reportUrl });
 
-      const endTime = Date.now();
-      metrics.updateServiceEndpointLatency(endTime - startTime);
+      const endServiceTime = Date.now();
+      metrics.updateServiceEndpointLatency(endServiceTime - startServiceTime);
     }
 
   })
