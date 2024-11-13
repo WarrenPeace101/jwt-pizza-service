@@ -48,9 +48,11 @@ async function setAuthUser(req, res, next) {
         // Check the database to make sure the token is valid.
         req.user = jwt.verify(token, config.jwtSecret);
         req.user.isRole = (role) => !!req.user.roles.find((r) => r.role === role);
+        metrics.incrementTotalAuthSuccesses();
       }
     } catch {
       req.user = null;
+      metrics.incrementTotalAuthFailures();
     }
   }
   next();
@@ -59,6 +61,8 @@ async function setAuthUser(req, res, next) {
 // Authenticate token
 authRouter.authenticateToken = (req, res, next) => {
   if (!req.user) {
+    metrics.incrementTotalAuthFailures();
+
     return res.status(401).send({ message: 'unauthorized' });
   }
   next();
@@ -68,17 +72,26 @@ authRouter.authenticateToken = (req, res, next) => {
 authRouter.post(
   '/',
   asyncHandler(async (req, res) => {
+
+    metrics.incrementPostRequests();
+    metrics.incrementTotalRequests();
     
+    const startTime = Date.now();
+  
     const { name, email, password } = req.body;
     if (!name || !email || !password) {
       return res.status(400).json({ message: 'name, email, and password are required' });
     }
     const user = await DB.addUser({ name, email, password, roles: [{ role: Role.Diner }] });
     const auth = await setAuth(user);
+
+    metrics.incrementTotalAuthSuccesses();
+
     res.json({ user: user, token: auth });
 
-    metrics.incrementPostRequests();
-    metrics.incrementTotalRequests();
+    const endTime = Date.now();
+    metrics.updateServiceEndpointLatency(endTime - startTime);
+
   })
 );
 
@@ -86,13 +99,23 @@ authRouter.post(
 authRouter.put(
   '/',
   asyncHandler(async (req, res) => {
+    metrics.incrementPutRequests();
+    metrics.incrementTotalRequests();
+
+    const startTime = Date.now();
+    
     const { email, password } = req.body;
     const user = await DB.getUser(email, password);
     const auth = await setAuth(user);
+
+    metrics.incrementTotalAuthSuccesses();
+    metrics.incrementActiveUsers();
+
     res.json({ user: user, token: auth });
 
-    metrics.incrementPutRequests();
-    metrics.incrementTotalRequests();
+    const endTime = Date.now();
+    metrics.updateServiceEndpointLatency(endTime - startTime);
+
   })
 );
 
@@ -101,11 +124,22 @@ authRouter.delete(
   '/',
   authRouter.authenticateToken,
   asyncHandler(async (req, res) => {
-    await clearAuth(req);
-    res.json({ message: 'logout successful' });
-
+   
     metrics.incrementDeleteRequests();
     metrics.incrementTotalRequests();
+    metrics.decrementActiveUsers();
+
+    const startTime = Date.now();
+
+    await clearAuth(req);
+
+    metrics.incrementTotalAuthSuccesses();
+
+    res.json({ message: 'logout successful' });
+
+    const endTime = Date.now();
+    metrics.updateServiceEndpointLatency(endTime - startTime);
+
   })
 );
 
@@ -114,19 +148,28 @@ authRouter.put(
   '/:userId',
   authRouter.authenticateToken,
   asyncHandler(async (req, res) => {
+    const startTime = Date.now();
+
+    metrics.incrementPutRequests();
+    metrics.incrementTotalRequests();
     
     const { email, password } = req.body;
     const userId = Number(req.params.userId);
     const user = req.user;
     if (user.id !== userId && !user.isRole(Role.Admin)) {
+      metrics.incrementTotalAuthFailures();
       return res.status(403).json({ message: 'unauthorized' });
     }
 
     const updatedUser = await DB.updateUser(userId, email, password);
+    metrics.incrementTotalAuthSuccesses();
+
+
     res.json(updatedUser);
 
-    metrics.incrementPutRequests();
-    metrics.incrementTotalRequests();
+    const endTime = Date.now();
+    metrics.updateServiceEndpointLatency(endTime - startTime);
+
   })
 );
 

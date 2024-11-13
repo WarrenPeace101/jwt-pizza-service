@@ -4,6 +4,8 @@ const config = require('../config.js');
 const { StatusCodeError } = require('../endpointHelper.js');
 const { Role } = require('../model/model.js');
 const dbModel = require('./dbModel.js');
+const metrics = require('../metrics.js');
+
 class DB {
   constructor() {
     this.initialized = this.initializeDatabase();
@@ -56,36 +58,29 @@ class DB {
   }
 
   async getUser(email, password) {
-    console.log('in get user function')
     const connection = await this.getConnection();
-    console.log('got connection')
     
     try {
       const userResult = await this.query(connection, `SELECT * FROM user WHERE email=?`, [email]);
       const user = userResult[0];
       if (!user || !(await bcrypt.compare(password, user.password))) {
+        metrics.incrementTotalAuthFailures();
         throw new StatusCodeError('unknown user', 404);
       }
 
-      console.log('not an unknown user!');
       const roleResult = await this.query(connection, `SELECT * FROM userRole WHERE userId=?`, [user.id]);
       const roles = roleResult.map((r) => {
         return { objectId: r.objectId || undefined, role: r.role };
       });
-      console.log('got user roles!')
-      console.log('user: ' + user)
-      console.log('roles: ' + roles)
-  
+      
       return { ...user, roles: roles, password: undefined };
     } finally {
-      console.log('leaving db get user!')
       connection.end();
     }
   }
 
   async updateUser(userId, email, password) {
     const connection = await this.getConnection();
-    //console.log('got connection', userId, email, password)
     try {
       const params = [];
       if (password) {
@@ -172,6 +167,7 @@ class DB {
       for (const admin of franchise.admins) {
         const adminUser = await this.query(connection, `SELECT id, name FROM user WHERE email=?`, [admin.email]);
         if (adminUser.length == 0) {
+          metrics.incrementTotalAuthFailures();
           throw new StatusCodeError(`unknown user for franchise admin ${admin.email} provided`, 404);
         }
         admin.id = adminUser[0].id;
