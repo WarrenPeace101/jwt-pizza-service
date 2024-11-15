@@ -18,7 +18,7 @@ class Metrics {
     this.pizzaCreationLatency = 0;
 
     // This will periodically sent metrics to Grafana
-    const timer = setInterval(() => {
+    /*const timer = setInterval(() => {
       this.sendHTTPrequests();
 
       this.sendMetricToGrafana('request', 'all', 'activeUsers', this.activeUsers);
@@ -34,7 +34,7 @@ class Metrics {
       this.sendLatencyInfo();
 
     }, 15000);
-    timer.unref();
+    timer.unref();*/
   }
 
   sendHTTPrequests() {

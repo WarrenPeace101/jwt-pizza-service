@@ -4,6 +4,7 @@ const config = require('../config.js');
 const { asyncHandler } = require('../endpointHelper.js');
 const { DB, Role } = require('../database/database.js');
 const metrics = require('../metrics.js');
+const logger = require('../logger.js');
 
 const authRouter = express.Router();
 
@@ -86,11 +87,21 @@ authRouter.post(
     const auth = await setAuth(user);
 
     metrics.incrementTotalAuthSuccesses();
-
+    res.status
     res.json({ user: user, token: auth });
 
     const endTime = Date.now();
     metrics.updateServiceEndpointLatency(endTime - startTime);
+
+    const logData = {
+      authorized: !!req.headers.authorization,
+      path: req.path,
+      method: req.method,
+      statusCode: res.statusCode,
+      reqBody: JSON.stringify(req.body),
+      resBody: JSON.stringify(res.body),
+    };
+    logger.customHttpLogger(logData);
 
   })
 );
