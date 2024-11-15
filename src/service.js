@@ -55,6 +55,7 @@ app.use('*', (req, res) => {
 app.use((err, req, res, next) => {
   //console.log('got connection')
   res.status(err.statusCode ?? 500).json({ message: err.message, stack: err.stack });
+  //logger.log('error', 'general', {'message':err.message});
   next();
 });
 

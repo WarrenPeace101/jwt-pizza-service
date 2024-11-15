@@ -84,8 +84,7 @@ class Logger {
       this.log('error', 'factory', factoryData);
     }
 
-
-
+    
     log(level, type, logData) {
         const labels = { component: config.logging.source, level: level, type: type };
         const values = [this.nowString(), this.sanitize(logData)];

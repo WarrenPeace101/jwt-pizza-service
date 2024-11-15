@@ -66,6 +66,7 @@ class DB {
       const user = userResult[0];
       if (!user || !(await bcrypt.compare(password, user.password))) {
         metrics.incrementTotalAuthFailures();
+        //logger.log('error', 'http', 'unknown user (either user or password is wrong)');
         throw new StatusCodeError('unknown user', 404);
       }
 
@@ -306,6 +307,7 @@ class DB {
     if (rows.length > 0) {
       return rows[0].id;
     }
+    logger.log('error', 'general', {'message':'database no id found'});
     throw new Error('No ID found');
   }
 
@@ -355,6 +357,7 @@ class DB {
         connection.end();
       }
     } catch (err) {
+      logger.log('error', 'general', {'message':'database did not intialize'});
       console.error(JSON.stringify({ message: 'Error initializing database', exception: err.message, connection: config.db.connection }));
     }
   }
