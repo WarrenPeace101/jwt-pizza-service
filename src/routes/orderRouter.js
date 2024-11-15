@@ -4,6 +4,7 @@ const { Role, DB } = require('../database/database.js');
 const { authRouter } = require('./authRouter.js');
 const { asyncHandler, StatusCodeError } = require('../endpointHelper.js');
 const metrics = require('../metrics.js');
+const logger = require('../logger.js');
 
 const orderRouter = express.Router();
 
@@ -130,6 +131,9 @@ orderRouter.post(
     const j = await r.json();
     if (r.ok) {
       createOrderMetrics(orderReq);
+      const createPizzaReq = JSON.stringify({ diner: { id: req.user.id, name: req.user.name, email: req.user.email }, order });
+      logger.sendPizzaToFactorySuccess(createPizzaReq);
+
 
       res.send({ order, jwt: j.jwt, reportUrl: j.reportUrl });
 
@@ -140,6 +144,8 @@ orderRouter.post(
     } else {
       metrics.incrementTotalAuthFailures();
       metrics.incrementNumPizzaCreationFailures();
+      const createPizzaReq = JSON.stringify({ diner: { id: req.user.id, name: req.user.name, email: req.user.email }, order });
+      logger.sendPizzaToFactoryFailure(createPizzaReq);
 
       res.status(500).send({ message: 'Failed to fulfill order at factory', reportUrl: j.reportUrl });
 

@@ -294,6 +294,9 @@ class DB {
 
     logger.sendSQLQuery(sql, params);
 
+    //console.log('after logger in query');
+    //console.log(params.toString());
+
     const [results] = await connection.execute(sql, params);
     return results;
   }

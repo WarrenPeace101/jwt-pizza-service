@@ -24,17 +24,67 @@ class Logger {
     };
 
     sendSQLQuery(queryVal, paramVal) {
-      console.log(queryVal);
-      console.log(paramVal);
+      //console.log(queryVal);
+      //console.log(paramVal);
 
-      if (queryVal.includes('password')) {
-        paramVal[paramVal.length - 1] = '*****'; //password is always stored as the final parameter
+      var newParamVal = []; //ensures that original param list isn't changed
+      for (let param in paramVal) {
+        newParamVal.push(param);
       }
 
-      console.log(paramVal)
+      if (queryVal.includes('password')) {
+        newParamVal[newParamVal.length - 1] = '*****'; //password is always stored as the final parameter
+      }
+      if (queryVal.includes('token')) {
+        newParamVal[0] = '*****'; //token is always stored as the fist parameter
+      }
+
+      //console.log(paramVal)
       
-      this.log('info', 'database', {query: queryVal, params: paramVal.toString()})
+      if (paramVal != null) {
+        this.log('info', 'database', {query: queryVal, params: newParamVal.toString()})
+      }
+      else {
+        this.log('info', 'database', {query: queryVal, params: newParamVal})
+      }
+      
     }
+
+    sendPizzaToFactorySuccess(orderReq) {
+
+      //onsole.log(orderReq);
+
+      const factoryData = {
+        authorized: true,
+        path: '/api/order',
+        method: 'POST',
+        statusCode: 200,
+        reqBody: orderReq,
+        resBody: {"jwt":"JWT here"}
+      };
+
+      //const level = this.statusToLogLevel(res.statusCode);
+
+      this.log('info', 'factory', factoryData);
+
+
+    }
+
+    sendPizzaToFactoryFailure(orderReq) {
+
+      const factoryData = {
+        authorized: true,
+        path: '/api/order',
+        method: 'POST',
+        statusCode: 500,
+        reqBody: orderReq,
+        resBody: {"jwt":"Failed to fulfill order at factory"}
+      };
+
+      this.log('error', 'factory', factoryData);
+    }
+
+
 
     log(level, type, logData) {
         const labels = { component: config.logging.source, level: level, type: type };
