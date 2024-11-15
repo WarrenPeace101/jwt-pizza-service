@@ -3,7 +3,7 @@ const config = require('./config.js');
 class Logger {
 
     httpLogger = (req, res, next) => {
-      console.log('in httpLogger');
+      //console.log('in httpLogger');
       let send = res.send;
       res.send = (resBody) => {
         const logData = {
@@ -19,17 +19,30 @@ class Logger {
         res.send = send;
         return res.send(resBody);
       };
-      console.log('before next in http');
+      //console.log('before next in http');
       next();
     };
+
+    sendSQLQuery(queryVal, paramVal) {
+      console.log(queryVal);
+      console.log(paramVal);
+
+      if (queryVal.includes('password')) {
+        paramVal[paramVal.length - 1] = '*****'; //password is always stored as the final parameter
+      }
+
+      console.log(paramVal)
+      
+      this.log('info', 'database', {query: queryVal, params: paramVal.toString()})
+    }
 
     log(level, type, logData) {
         const labels = { component: config.logging.source, level: level, type: type };
         const values = [this.nowString(), this.sanitize(logData)];
         const logEvent = { streams: [{ stream: labels, values: [values] }] };
 
-        console.log("log event");
-        console.log(logEvent);
+        //console.log("log event");
+        //console.log(logEvent);
         this.sendLogToGrafana(logEvent);
     }
     
@@ -44,14 +57,14 @@ class Logger {
     }
 
     sanitize(logData) {
-        logData = JSON.stringify(logData);
-        return logData.replace(/\\"password\\":\s*\\"[^"]*\\"/g, '\\"password\\": \\"*****\\"');
+      logData = JSON.stringify(logData);
+      return logData.replace(/\\"password\\":\s*\\"[^"]*\\"/g, '\\"password\\": \\"*****\\"');
     }
 
     sendLogToGrafana(event) {
-        console.log('in send log');
+        //console.log('in send log');
         const body = JSON.stringify(event);
-        console.log(body);
+        //console.log(body);
         fetch(`${config.logging.url}`, {
           method: 'post',
           body: body,
@@ -62,7 +75,7 @@ class Logger {
         }).then((res) => {
           if (!res.ok) console.log('Failed to send log to Grafana');
         });
-        console.log('before next in send log');
+        //console.log('before next in send log');
         //next();
     }
 
