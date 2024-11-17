@@ -170,4 +170,17 @@ jobs:
           service: jwt-pizza-service
           cluster: jwt-pizza-service
           wait-for-service-stability: false
-          
+
+      - name: Annotate deployment in Grafana
+        run: |
+          curl -s -X POST https://warrenpeace101.grafana.net/api/annotations -H "Authorization: Bearer ${{ secrets.GRAFANA_ACCESS_TOKEN }}" -H "Content-Type:application/json" -d '{"dashboardUID":"ee31qjqjjj8cge", "panelId":22, "tags":["backend","production"], "text":"Version '"$version"' deployed" }'
+          curl -s -X POST https://warrenpeace101.grafana.net/api/annotations -H "Authorization: Bearer ${{ secrets.GRAFANA_ACCESS_TOKEN }}" -H "Content-Type:application/json" -d '{"dashboardUID":"ee31qjqjjj8cge", "panelId":7, "tags":["backend","production"], "text":"Version '"$version"' deployed" }'
+          curl -s -X POST https://warrenpeace101.grafana.net/api/annotations -H "Authorization: Bearer ${{ secrets.GRAFANA_ACCESS_TOKEN }}" -H "Content-Type:application/json" -d '{"dashboardUID":"ee31qjqjjj8cge", "panelId":21, "tags":["backend","production"], "text":"Version '"$version"' deployed" }'
+          curl -s -X POST https://warrenpeace101.grafana.net/api/annotations -H "Authorization: Bearer ${{ secrets.GRAFANA_ACCESS_TOKEN }}" -H "Content-Type:application/json" -d '{"dashboardUID":"ee31qjqjjj8cge", "panelId":9, "tags":["backend","production"], "text":"Version '"$version"' deployed" }'
+          curl -s -X POST https://warrenpeace101.grafana.net/api/annotations -H "Authorization: Bearer ${{ secrets.GRAFANA_ACCESS_TOKEN }}" -H "Content-Type:application/json" -d '{"dashboardUID":"ee31qjqjjj8cge", "panelId":20, "tags":["backend","production"], "text":"Version '"$version"' deployed" }'
+          curl -s -X POST https://warrenpeace101.grafana.net/api/annotations -H "Authorization: Bearer ${{ secrets.GRAFANA_ACCESS_TOKEN }}" -H "Content-Type:application/json" -d '{"dashboardUID":"ee31qjqjjj8cge", "panelId":10, "tags":["backend","production"], "text":"Version '"$version"' deployed" }'
+          curl -s -X POST https://warrenpeace101.grafana.net/api/annotations -H "Authorization: Bearer ${{ secrets.GRAFANA_ACCESS_TOKEN }}" -H "Content-Type:application/json" -d '{"dashboardUID":"ee31qjqjjj8cge", "panelId":19, "tags":["backend","production"], "text":"Version '"$version"' deployed" }'
+          curl -s -X POST https://warrenpeace101.grafana.net/api/annotations -H "Authorization: Bearer ${{ secrets.GRAFANA_ACCESS_TOKEN }}" -H "Content-Type:application/json" -d '{"dashboardUID":"ee31qjqjjj8cge", "panelId":12, "tags":["backend","production"], "text":"Version '"$version"' deployed" }'
+          curl -s -X POST https://warrenpeace101.grafana.net/api/annotations -H "Authorization: Bearer ${{ secrets.GRAFANA_ACCESS_TOKEN }}" -H "Content-Type:application/json" -d '{"dashboardUID":"ee31qjqjjj8cge", "panelId":11, "tags":["backend","production"], "text":"Version '"$version"' deployed" }'
+          curl -s -X POST https://warrenpeace101.grafana.net/api/annotations -H "Authorization: Bearer ${{ secrets.GRAFANA_ACCESS_TOKEN }}" -H "Content-Type:application/json" -d '{"dashboardUID":"ee31qjqjjj8cge", "panelId":6, "tags":["backend","production"], "text":"Version '"$version"' deployed" }'
+          curl -s -X POST https://warrenpeace101.grafana.net/api/annotations -H "Authorization: Bearer ${{ secrets.GRAFANA_ACCESS_TOKEN }}" -H "Content-Type:application/json" -d '{"dashboardUID":"ee31qjqjjj8cge", "panelId":8, "tags":["backend","production"], "text":"Version '"$version"' deployed" }'
