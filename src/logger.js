@@ -67,7 +67,6 @@ class Logger {
 
       this.log('info', 'factory', factoryData);
 
-
     }
 
     sendPizzaToFactoryFailure(orderReq) {
@@ -126,6 +125,10 @@ class Logger {
         });
         //console.log('before next in send log');
         //next();
+    }
+
+    chaosMode() {
+      this.log('info', 'chaos', {chaos: "chaos has been configured"})
     }
 
 }
