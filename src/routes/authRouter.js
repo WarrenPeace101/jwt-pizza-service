@@ -7,7 +7,7 @@ const metrics = require('../metrics.js');
 const logger = require('../logger.js');
 
 const authRouter = express.Router();
-var letChaos;
+var enableChaos;
 
 authRouter.endpoints = [
   {
