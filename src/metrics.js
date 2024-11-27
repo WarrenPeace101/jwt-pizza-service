@@ -16,6 +16,7 @@ class Metrics {
     this.numPizzaCreationFailures = 0;
     this.serviceLatency = 0;
     this.pizzaCreationLatency = 0;
+    this.chaosStatus = false;
 
     // This will periodically sent metrics to Grafana
     const timer = setInterval(() => {
@@ -144,6 +145,14 @@ class Metrics {
     const usedMemory = totalMemory - freeMemory;
     const memoryUsage = (usedMemory / totalMemory) * 100;
     return memoryUsage.toFixed(2);
+  }
+
+  chaosModeMetrics() {
+    this.sendMetricToGrafana('request', 'all', 'chaosMode', chaosStatus)
+  }
+
+  setChaosStatus(val) {
+    this.chaosStatus = val;
   }
 
 }

@@ -127,7 +127,7 @@ class Logger {
         //next();
     }
 
-    chaosMode(endpointName) {
+    chaosModeLogger(endpointName) {
       this.log('info', 'chaos', {chaos: endpointName + " has failed due to chaos >:D"})
     }
 

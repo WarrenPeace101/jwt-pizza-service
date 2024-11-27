@@ -106,9 +106,8 @@ authRouter.post(
     logger.customHttpLogger(logData);
     }
     else {
-      logger.chaosMode("register user");
+      logger.chaosModeLogger("register user");
       res.json({chaosMode: "Sorry, you are having some chaos >:D"});
-
     }
 
     
@@ -204,14 +203,19 @@ authRouter.put(
     metrics.incrementPutRequests();
     metrics.incrementTotalRequests();
 
-    logger.chaosMode();
+    //logger.chaosMode();
     
     if (!req.user.isRole(Role.Admin)) {
       metrics.incrementTotalAuthFailures();
       throw new StatusCodeError('unknown endpoint', 404);
     }
 
+    metrics.setChaosStatusTrue();
+    metrics.chaosModeMetrics();
+
     enableChaos = req.params.state === 'true';
+    metrics.setChaosSatus(enableChaos);
+    
     res.json({ chaos: enableChaos });
 
     const endTime = Date.now();
