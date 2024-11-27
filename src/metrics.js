@@ -148,7 +148,7 @@ class Metrics {
   }
 
   chaosModeMetrics() {
-    this.sendMetricToGrafana('request', 'all', 'chaosMode', chaosStatus)
+    this.sendMetricToGrafana('request', 'all', 'chaosMode', this.chaosStatus)
   }
 
   setChaosStatus(val) {
