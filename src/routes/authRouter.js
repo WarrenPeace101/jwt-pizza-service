@@ -75,7 +75,7 @@ authRouter.post(
   '/',
   asyncHandler(async (req, res) => {
     console.log(enableChaos);
-    if (enableChaos != 'true') {
+    if (enableChaos != true) {
       metrics.incrementPostRequests();
       metrics.incrementTotalRequests();
       
