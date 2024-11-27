@@ -74,6 +74,7 @@ authRouter.authenticateToken = (req, res, next) => {
 authRouter.post(
   '/',
   asyncHandler(async (req, res) => {
+    console.log(enableChaos);
     if (enableChaos != 'true') {
       metrics.incrementPostRequests();
       metrics.incrementTotalRequests();
