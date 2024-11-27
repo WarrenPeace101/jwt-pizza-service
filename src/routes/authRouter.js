@@ -7,6 +7,7 @@ const metrics = require('../metrics.js');
 const logger = require('../logger.js');
 
 const authRouter = express.Router();
+var letChaos;
 
 authRouter.endpoints = [
   {
@@ -73,35 +74,43 @@ authRouter.authenticateToken = (req, res, next) => {
 authRouter.post(
   '/',
   asyncHandler(async (req, res) => {
-
-    metrics.incrementPostRequests();
-    metrics.incrementTotalRequests();
+    if (enableChaos != 'true') {
+      metrics.incrementPostRequests();
+      metrics.incrementTotalRequests();
+      
+      const startTime = Date.now();
     
-    const startTime = Date.now();
-  
-    const { name, email, password } = req.body;
-    if (!name || !email || !password) {
-      return res.status(400).json({ message: 'name, email, and password are required' });
-    }
-    const user = await DB.addUser({ name, email, password, roles: [{ role: Role.Diner }] });
-    const auth = await setAuth(user);
+      const { name, email, password } = req.body;
+      if (!name || !email || !password) {
+        return res.status(400).json({ message: 'name, email, and password are required' });
+      }
+      const user = await DB.addUser({ name, email, password, roles: [{ role: Role.Diner }] });
+      const auth = await setAuth(user);
 
-    metrics.incrementTotalAuthSuccesses();
-    res.status
-    res.json({ user: user, token: auth });
+      metrics.incrementTotalAuthSuccesses();
+      res.status
+      res.json({ user: user, token: auth });
 
-    const endTime = Date.now();
-    metrics.updateServiceEndpointLatency(endTime - startTime);
+      const endTime = Date.now();
+      metrics.updateServiceEndpointLatency(endTime - startTime);
 
-    const logData = {
-      authorized: !!req.headers.authorization,
-      path: req.path,
-      method: req.method,
-      statusCode: res.statusCode,
-      reqBody: JSON.stringify(req.body),
-      resBody: JSON.stringify(res.body),
-    };
+      const logData = {
+        authorized: !!req.headers.authorization,
+        path: req.path,
+        method: req.method,
+        statusCode: res.statusCode,
+        reqBody: JSON.stringify(req.body),
+        resBody: JSON.stringify(res.body),
+      };
     logger.customHttpLogger(logData);
+    }
+    else {
+      logger.chaosMode("register user");
+      res.json({chaosMode: "Sorry, you are having some chaos >:D"});
+
+    }
+
+    
 
   })
 );
@@ -201,7 +210,7 @@ authRouter.put(
       throw new StatusCodeError('unknown endpoint', 404);
     }
 
-    let enableChaos = req.params.state === 'true';
+    enableChaos = req.params.state === 'true';
     res.json({ chaos: enableChaos });
 
     const endTime = Date.now();
