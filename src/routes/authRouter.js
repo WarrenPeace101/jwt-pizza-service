@@ -211,7 +211,7 @@ authRouter.put(
     }
 
     enableChaos = req.params.state === 'true';
-    metrics.setChaosSatus(enableChaos);
+    metrics.setChaosStatus(enableChaos);
     metrics.chaosModeMetrics();
     
     res.json({ chaos: enableChaos });
