@@ -134,8 +134,8 @@ orderRouter.post(
       const createPizzaReq = JSON.stringify({ diner: { id: req.user.id, name: req.user.name, email: req.user.email }, order });
       logger.sendPizzaToFactorySuccess(createPizzaReq);
 
-
-      res.send({ order, jwt: j.jwt, reportUrl: j.reportUrl });
+      res.send({ order, jwt: j.jwt});
+      //res.send({ order, jwt: j.jwt, reportUrl: j.reportUrl });
 
       const endServiceTime = Date.now();
       const endPizzaTime = Date.now();
