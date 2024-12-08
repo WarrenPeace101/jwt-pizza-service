@@ -10,6 +10,8 @@ const logger = require('../logger.js');
 class DB {
   constructor() {
     this.initialized = this.initializeDatabase();
+    this.emailAttempts = new Map();
+    this.emailLockouts = new Map();
   }
 
   async getMenu() {
@@ -64,10 +66,57 @@ class DB {
     try {
       const userResult = await this.query(connection, `SELECT * FROM user WHERE email=?`, [email]);
       const user = userResult[0];
-      if (!user || !(await bcrypt.compare(password, user.password))) {
+
+      // if (!user || !(await bcrypt.compare(password, user.password))) {
+      //   metrics.incrementTotalAuthFailures();
+      //   //logger.log('error', 'http', 'unknown user (either user or password is wrong)');
+      //   throw new StatusCodeError('unknown user', 404);
+      // }
+
+      //if email doesn't exist in database
+      if (!user) {
         metrics.incrementTotalAuthFailures();
-        //logger.log('error', 'http', 'unknown user (either user or password is wrong)');
         throw new StatusCodeError('unknown user', 404);
+      }
+
+      const attemptTime = Date.now();
+      if (this.emailLockouts.has(user.email)) {
+
+        //this checks to see if it's been less than 10 minutes since you were locked out
+       if (attemptTime - this.emailLockouts.get(user.email) < 60000) {
+          throw new StatusCodeError('sorry, you are locked out! try again later!', 404);
+        }
+        else {
+          //this resets the attempt num after the time
+          this.emailAttempts.set(user.email, 0);
+          this.emailLockouts.delete(user.email);
+        }
+      }
+
+      if (!(await bcrypt.compare(password, user.password))) {
+        metrics.incrementTotalAuthFailures();
+        if (this.emailAttempts.has(user.email)) {
+          var emailGuesses = this.emailAttempts.get(user.email);
+          if (emailGuesses > 4) {
+            const lockoutTime = Date.now();
+            this.emailLockouts.set(user.email, lockoutTime);
+
+            throw new StatusCodeError('too many incorrect password guesses, sorry! try again later!', 404);
+            
+
+
+
+          }
+          else {
+            this.emailAttempts.set(user.email, emailGuesses + 1)
+            throw new StatusCodeError('incorrect password', 404);
+          }
+
+        }
+        else {
+          this.emailAttempts.set(user.email, 1);
+          throw new StatusCodeError('incorrect password', 404);
+        }
       }
 
       const roleResult = await this.query(connection, `SELECT * FROM userRole WHERE userId=?`, [user.id]);
